@@ -23,7 +23,11 @@ export const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <span className="text-2xl md:text-3xl font-heading font-bold text-gradient-gold">
-              Barkaas
+              <img
+                src="src/assets/logo-navbar.png"
+                alt="Barkaas Logo"
+                className="h-24 w-24"
+              />
             </span>
           </Link>
 

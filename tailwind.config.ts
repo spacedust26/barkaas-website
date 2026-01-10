@@ -88,11 +88,32 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        'story-reveal-slow': {
+          '0%': { opacity: '0', transform: 'translateY(32px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        "slow-rotate": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
+        "story-reveal-rotate": {
+          "0%": {
+            opacity: "0",
+            transform: "rotate(-45deg) scale(0.95)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "rotate(0deg) scale(1)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        'story-reveal-slow': 'story-reveal-slow 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards',
         shimmer: "shimmer 3s linear infinite",
+        "slow-rotate": "slow-rotate 60s linear infinite",
+        "story-reveal-rotate": "story-reveal-rotate 1s ease-out forwards",
       },
     },
   },
