@@ -1,29 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import heroImage from "@/assets/hero-restaurant.jpg";
-import mezzeImage from "@/assets/food-mezze.jpg";
-import lambImage from "@/assets/food-lamb.jpg";
-import riceImage from "@/assets/food-rice.jpg";
-import dessertImage from "@/assets/food-dessert.jpg";
-
-const galleryImages = [
-  { id: 1, src: heroImage, alt: "Restaurant Interior", category: "Ambiance" },
-  { id: 2, src: mezzeImage, alt: "Mezze Platter", category: "Food" },
-  { id: 3, src: lambImage, alt: "Grilled Lamb", category: "Food" },
-  { id: 4, src: riceImage, alt: "Saffron Rice", category: "Food" },
-  { id: 5, src: dessertImage, alt: "Kunafa Dessert", category: "Food" },
-  { id: 6, src: heroImage, alt: "Dining Area", category: "Ambiance" },
-  { id: 7, src: mezzeImage, alt: "Traditional Appetizers", category: "Food" },
-  { id: 8, src: lambImage, alt: "Chef's Special", category: "Food" },
-];
-
-const categories = ["All", "Food", "Ambiance"];
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [selectedImage, setSelectedImage] = useState<typeof galleryImages[0] | null>(null);
+  const [selectedImage, setSelectedImage] = useState<{ id: number; src: string; alt: string; category: string } | null>(null);
+  const [galleryImages, setGalleryImages] = useState<{ id: number; src: string; alt: string; category: string }[]>([]);
+
+  useEffect(() => {
+     const ambienceModules = import.meta.glob<{ default: string }>('/src/assets/ambience/*.{jpg,jpeg,png,webp}', { eager: true });
+    const foodModules = import.meta.glob<{ default: string }>('/src/assets/food/*.{jpg,jpeg,png,webp}', { eager: true });
+
+    const ambienceImages = Object.entries(ambienceModules).map(([path, mod], index) => {
+      const fileName = path.split('/').pop()?.split('.')[0] || `ambience-${index}`;
+      const url = (mod as { default: string }).default;
+      return {
+        id: index + 1,
+        src: url,
+        alt: `${fileName.charAt(0).toUpperCase() + fileName.slice(1)} - Restaurant Interior`,
+        category: "Ambiance" as const
+      };
+    });
+
+    const foodImages = Object.entries(foodModules).map(([path, mod], index) => {
+      const fileName = path.split('/').pop()?.split('.')[0] || `food-${index}`;
+      const url = (mod as { default: string }).default;
+      return {
+        id: ambienceImages.length + index + 1,
+        src: url,
+        alt: `${fileName.charAt(0).toUpperCase() + fileName.slice(1)} Dish`,
+        category: "Food" as const
+      };
+    });
+
+    setGalleryImages([...ambienceImages, ...foodImages]);
+  }, []);
+
+  const categories = ["All", "Food", "Ambiance"];
 
   const filteredImages = activeCategory === "All"
     ? galleryImages
@@ -48,7 +62,7 @@ const Gallery = () => {
       </section>
 
       {/* Gallery */}
-      <section className="py-16">
+      <section className="py-2">
         <div className="container mx-auto px-4">
           {/* Category Filter */}
           <div className="flex justify-center gap-3 mb-12">
