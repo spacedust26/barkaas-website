@@ -4,15 +4,13 @@ import { ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import { Document, Page, pdfjs } from "react-pdf";
 import PageFlip from "react-pageflip";
 import { Button } from "@/components/ui/button";
+import pdf1 from "@/assets/menus/food.pdf";
+import pdf2 from "@/assets/menus/drinks.pdf";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-import {  GlobalWorkerOptions } from "pdfjs-dist";
-
-GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+pdfjs.GlobalWorkerOptions.workerSrc =
+  `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 const Menu = () => {
   const [activeTab, setActiveTab] = useState<"food" | "beverage">("food");
@@ -20,14 +18,14 @@ const Menu = () => {
   const menus = {
     food: {
       title: "Food Menu",
-      pdfUrl: "/food.pdf",
+      pdfUrl: pdf1,
     },
     beverage: {
       title: "Beverage Menu",
-      pdfUrl: "/drinks.pdf",
+      pdfUrl: pdf2,
     },
   };
-  console.log(menus.food.pdfUrl);
+
   const FlipBook = ({
     pdfUrl,
     title,
@@ -37,7 +35,6 @@ const Menu = () => {
   }) => {
     const [numPages, setNumPages] = useState(0);
     const [pageNumber, setPageNumber] = useState(1);
-    
 
     const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
       setNumPages(numPages);
@@ -56,7 +53,7 @@ const Menu = () => {
         </div>
 
         {/* Flipbook */}
-        <div className="bg-amber-950rounded-3xl shadow-2xl overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
           <Document
             file={pdfUrl}
             onLoadSuccess={onDocumentLoadSuccess}
@@ -99,11 +96,11 @@ const Menu = () => {
                 {Array.from({ length: numPages }, (_, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-center p-6"
+                    className="flex items-center justify-center bg-white p-6"
                   >
                     <Page
                       pageNumber={index + 1}
-                      width={520}
+                      width={550}
                       renderAnnotationLayer={false}
                       renderTextLayer={false}
                     />
