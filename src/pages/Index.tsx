@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { useEffect, useState } from "react";
-import { ArrowRight, Utensils, Star, Clock } from "lucide-react";
+import { ArrowRight, Star, Quote, User } from "lucide-react";
 import heroImage1 from "@/assets/ambience/_RON3054.jpg";
 import heroImage2 from "@/assets/ambience/_DSC1109.jpg";
 import heroImage3 from "@/assets/ambience/_RON3068.jpg";
@@ -14,7 +14,6 @@ import img4 from "@/assets/mainpage-4.png";
 import img5 from "@/assets/mainpage-5.png";
 import img6 from "@/assets/mainpage-6.png";
 import img7 from "@/assets/mainpage-7.png";
-import img8 from "@/assets/mainpage-8.png";
 
 const storyBlocks = [
   {
@@ -47,6 +46,28 @@ const storyBlocks = [
   },
 ];
 
+const testimonials = [
+  {
+    quote: "This Indo-Arabic spot is a winner, with incredibly friendly and professional staff! 😊 The ambiance is a must-see, with a cool Arabic vibe that transports you! ✨You've got to try their variety of Mandi and platters—a true feast! 🤤 And the sweets? Simply the best way to end your meal! 🍮 It might be a bit pricey, but the experience is totally worth it. 😉",
+    author: "Kiran Pattanashetty",
+    role: "Whitefield, Bengaluru",
+    rating: 4,
+  },
+  {
+    quote: "They have the best Mandi with a wide variety of options. The dishes have an authentic touch of Arabic cuisine, and everything tastes really good. I especially love their Drums of Heaven it tastes absolutely amazing.",
+    author: "Arzoo Shakeen",
+    role: "Hazratganj, Uttar Pradesh",
+    rating: 5,
+  },
+  {
+    quote: "If you’re in Gachibowli, you have to check out Barkaas Indo Arabic Restaurant! We had an incredible dinner last night—the BBQ starters were seasoned to perfection and the Big Daddy Mandi was absolutely worth the hype. Hands down some of the best Mandi I’ve ever had. Highly recommend.",
+    author: "Sohail Mohammad",
+    role: "Gachibowli, Hyderabad",
+    rating: 5,
+  },
+];
+
+
 const featuredDishes = [
   { name: "Big Daddy Mandi", description: "A grand platter of fragrant basmati rice slow-cooked with tender, generously seasoned meat, infused with traditional spices and finished with roasted nuts for a bold, celebratory feast.", image: img5 },
   { name: "Murg Musallam Mandi", description: "Whole chicken marinated in aromatic spices, slow-roasted to juicy perfection and served atop long-grain basmati rice, delicately perfumed and garnished with roasted onions and spices.", image: img6 },
@@ -57,6 +78,22 @@ const heroImages = [heroImage1, heroImage2, heroImage3, heroImage4];
 const Index = () => {
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [visibleBlocks, setVisibleBlocks] = useState<number[]>([]);
+  const [visibleTestimonials, setVisibleTestimonials] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setVisibleTestimonials(true);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const section = document.querySelector('.testimonials-section');
+    if (section) observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -266,6 +303,59 @@ const Index = () => {
                 <ArrowRight className="ml-2" size={18} />
               </Link>
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-24 bg-gradient-to-b from-background to-secondary/50 relative overflow-hidden">
+        <div className="absolute inset-0 bg-pattern-arabesque opacity-5" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <p className="text-gold font-medium tracking-[0.2em] uppercase mb-2">
+              What Our Guests Say
+            </p>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground">
+              Guest Testimonials
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={testimonial.author}
+                className="group relative bg-background/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl 
+                          border border-gold/20 hover:border-gold/40 hover:shadow-2xl hover:shadow-gold/30
+                          transition-all duration-500 hover:-translate-y-2 animate-fade-in-up-slow"
+                style={{ animationDelay: `${index * 200}ms` }}
+              >
+                {/* Quote Icon */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-12 bg-gold/10 rounded-2xl flex items-center justify-center border-2 border-gold/30 group-hover:bg-gold/20 transition-colors">
+                  <Quote className="text-gold w-6 h-6" />
+                </div>
+
+                {/* Stars */}
+                <div className="flex justify-center mb-4 -mt-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-gold fill-gold' : 'text-gold/30'}`} />
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <blockquote className="text-lg font-light italic text-foreground/90 leading-relaxed mb-6 text-center">
+                  "{testimonial.quote}"
+                </blockquote>
+
+               {/* Author */}
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-gold/20 to-gold/10 rounded-full mx-auto mb-3 flex items-center justify-center border-2 border-gold/30 group-hover:scale-110 transition-transform">
+                    <User className="w-8 h-8 text-gold/70 group-hover:text-gold" />
+                  </div>
+                  <h4 className="font-heading font-semibold text-foreground">{testimonial.author}</h4>
+                  <p className="text-gold/80 text-sm">{testimonial.role}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
